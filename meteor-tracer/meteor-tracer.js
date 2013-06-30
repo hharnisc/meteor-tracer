@@ -9,16 +9,11 @@ if (Meteor.isClient) {
     Session.set('tracer_id', tracer_id);
   });
 
-  Template.display.events({
-    'mousemove' : updateTracer,
-    'touchmove' : updateTracer
-  });
-
-  function updateTracer(ev) {
+function updateTracer(ev) {
     var now = (new Date()).getTime();
       tracer = Tracer.findOne(Session.get('tracer_id'));
-      var x = ev.x;
-      var y = ev.y;
+      var x = ev.clientX;
+      var y = ev.clientY;
 
       if (x === undefined) {
         x = ev.touches[0].pageX;
@@ -37,6 +32,11 @@ if (Meteor.isClient) {
         tracer = Tracer.insert({_id: Session.get('tracer_id'), x: x, y: y, last_seen: now, color: colors[randIdx]});
       }
   }
+
+  Template.display.events({
+    'mousemove' : updateTracer,
+    'touchmove' : updateTracer
+  });
 
   Template.display.tracers = function () {
     return Tracer.find({});
