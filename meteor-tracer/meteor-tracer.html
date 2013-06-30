@@ -1,0 +1,25 @@
+<head>
+  <title>Tracer</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  {{> display}}
+</body>
+
+<template name="display">
+	<div class="tracepad">
+		<h1> Tracer </h1>
+		<div id="help">
+    		Move your mouse around. Dots are other humans.
+    	</div>
+		{{#each tracers}}
+      		{{> tracer}}
+    	{{/each}}
+	</div>
+</template>
+
+<template name="tracer">
+  <div id='{{_id}}'class="tracer {{color}}" style="position: absolute; left:{{x}}px; top:{{y}}px; background:{{color}};">
+  </div>
+</template>
