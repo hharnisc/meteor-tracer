@@ -10,19 +10,33 @@ if (Meteor.isClient) {
   });
 
   Template.display.events({
-    'mousemove' : function(ev) {
-      var now = (new Date()).getTime();
+    'mousemove' : updateTracer,
+    'touchmove' : updateTracer
+  });
+
+  function updateTracer(ev) {
+    var now = (new Date()).getTime();
       tracer = Tracer.findOne(Session.get('tracer_id'));
+      var x = ev.x;
+      var y = ev.y;
+
+      if (x === undefined) {
+        x = ev.touches[0].pageX;
+      } 
+
+      if (y === undefined) {
+        y = ev.touches[0].pageY;
+      }
+
       // tracer has already been added to database
       if (tracer) {
-        Tracer.update(Session.get('tracer_id'), {x: ev.x, y: ev.y, last_seen: now, color: tracer.color});
+        Tracer.update(Session.get('tracer_id'), {x: x, y: y, last_seen: now, color: tracer.color});
       } else {
       // session was created -- insert a new record with old tracer id
         var randIdx = Math.floor(Math.random() * colors.length);
-        tracer = Tracer.insert({_id: Session.get('tracer_id'), x: ev.x, y: ev.y, last_seen: now, color: colors[randIdx]});
+        tracer = Tracer.insert({_id: Session.get('tracer_id'), x: x, y: y, last_seen: now, color: colors[randIdx]});
       }
-    }
-  });
+  }
 
   Template.display.tracers = function () {
     return Tracer.find({});
